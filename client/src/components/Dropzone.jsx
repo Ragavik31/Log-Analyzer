@@ -12,7 +12,7 @@ export default function Dropzone({ onPreview }) {
     form.append('file', file)
     try {
       const { data } = await api.post('/api/upload', form, { headers: { 'Content-Type': 'multipart/form-data' } })
-      onPreview?.(data)
+      if (onPreview) onPreview(data)
     } catch (e) {
       setError(e?.response?.data?.error || e.message)
     }
@@ -32,7 +32,7 @@ export default function Dropzone({ onPreview }) {
       >
         <p style={{ margin: 0 }}>Drag & drop .json/.log/.txt/.docx here, or click to select</p>
         <input ref={inputRef} type="file" accept=".json,.log,.txt,.docx" style={{ display: 'none' }} onChange={(e) => {
-          const f = e.target.files?.[0]; if (f) onDrop(f)
+          const f = e.target.files && e.target.files[0]; if (f) onDrop(f)
         }} />
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
